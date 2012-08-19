@@ -1,0 +1,20 @@
+contacts(1) -- Command line interface to OS X Address Book.
+===========================================================
+
+## SYNOPSIS ##
+
+`contacts` [`-h`] [`-v`] <query>  
+
+## DESCRIPTION ##
+
+`contacts` is a command line program for interfacing with the Mac OS X Address Book database.  The required argument *query* is the search term.  Results are displayed one to a line with email address first followed by name.  First name, last name, nickname, and email addresses are currently searched.
+
+## OPTIONS ##
+
+The options are as follows:
+
+* `-h`, `--help`:
+  Display help.
+
+* `-v`, `--version`:
+  Display version and build number.

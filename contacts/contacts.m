@@ -26,7 +26,10 @@ int main(int argc, const char * argv[])
         NSArray *allArgs = [[NSProcessInfo processInfo] arguments];
         NSMutableArray *args;
         NSString *usageStr = [NSString stringWithFormat:@"Usage: %s <options> search_term\n", [[proc processName] UTF8String]];
-
+        NSBundle *bundle = [NSBundle mainBundle];
+        id versionNum = [bundle objectForInfoDictionaryKey: (NSString*) @"CFBundleShortVersionString"];
+        id buildNum = [bundle objectForInfoDictionaryKey: (NSString*) kCFBundleVersionKey];
+        NSString *versionStr = [NSString stringWithFormat:@"%s %@ (%@)\n", [[proc processName] UTF8String], versionNum, buildNum];
         
         // set up some arguments stuff
         args = [[NSMutableArray alloc] initWithCapacity: 2];
@@ -35,6 +38,8 @@ int main(int argc, const char * argv[])
         
         NSArray *helpArg = [NSArray arrayWithObjects: @"--help", @"--h", @"-h",
                 @"-help", nil];
+        NSArray *versionArg = [NSArray arrayWithObjects: @"--version", @"-v",
+                              nil];
         NSArray *formatArg = [NSArray arrayWithObjects: @"--format", @"-f",
                 nil];
         
@@ -54,8 +59,12 @@ int main(int argc, const char * argv[])
                     printf("%s", [usageStr UTF8String]);
                     return 0;
                 }
-
-                // mutt
+                // version
+                else if ([versionArg containsObject: theArg] == YES) {
+                    printf("%s", [versionStr UTF8String]);
+                    return 0;
+                }
+                // format
                 else if ([formatArg containsObject: theArg] == YES) {
                     [indexesToRemove addIndex: i];
                 }

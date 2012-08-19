@@ -27,6 +27,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1623591E15E164AD007BFA78 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = contacts/Info.plist; sourceTree = SOURCE_ROOT; };
 		1662F77815DFDF7800DFCCCB /* contacts */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = contacts; sourceTree = BUILT_PRODUCTS_DIR; };
 		1662F77C15DFDF7800DFCCCB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1662F77F15DFDF7800DFCCCB /* contacts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = contacts.m; sourceTree = "<group>"; };
@@ -87,6 +88,7 @@
 		1662F78115DFDF7800DFCCCB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1623591E15E164AD007BFA78 /* Info.plist */,
 				1662F78215DFDF7800DFCCCB /* contacts-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -99,6 +101,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1662F78715DFDF7900DFCCCB /* Build configuration list for PBXNativeTarget "contacts" */;
 			buildPhases = (
+				1623590615E15D7E007BFA78 /* Run Script */,
 				1662F77415DFDF7800DFCCCB /* Sources */,
 				1662F77515DFDF7800DFCCCB /* Frameworks */,
 				1662F77615DFDF7800DFCCCB /* CopyFiles */,
@@ -137,6 +140,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1623590615E15D7E007BFA78 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# https://gist.github.com/2622886#file_gistfile1.sh\n# Assumes that you tag versions with the version number (e.g., \"1.1\") and then the build number is\n# that plus the number of commits since the tag (e.g., \"1.1.17\")\n\necho \"Updating version/build number from git...\"\nplist=${PROJECT_DIR}/${INFOPLIST_FILE}\n\n# increment the build number (ie 115 to 116)\nversionnum=`git describe | awk '{split($0,a,\"-\"); print a[1]}'`\nbuildnum=`git describe | awk '{split($0,a,\"g\"); print a[1]}'`\n\nif [[ \"${versionnum}\" == \"\" ]]; then\n#echo \"No version number from git\"\n#exit 2\nversionnum='0.0'\nfi\n\nif [[ \"${buildnum}\" == \"\" ]]; then\n#echo \"No build number from git\"\n#exit 2\nbuildnum=`git rev-parse --short HEAD`\nfi\n\n/usr/libexec/Plistbuddy -c \"Set CFBundleShortVersionString $versionnum\" \"${plist}\"\necho \"Updated version number to $versionnum\"\n\n/usr/libexec/Plistbuddy -c \"Set CFBundleVersion $buildnum\" \"${plist}\"\necho \"Updated build number to $buildnum\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1662F77415DFDF7800DFCCCB /* Sources */ = {
@@ -204,6 +224,13 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "contacts/contacts-Prefix.pch";
+				INFOPLIST_FILE = contacts/Info.plist;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(INFOPLIST_FILE)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -213,6 +240,13 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "contacts/contacts-Prefix.pch";
+				INFOPLIST_FILE = contacts/Info.plist;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(INFOPLIST_FILE)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -236,6 +270,7 @@
 				1662F78915DFDF7900DFCCCB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

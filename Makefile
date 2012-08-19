@@ -1,29 +1,59 @@
 XCODEBUILD=/usr/bin/xcodebuild
 srcdir = contacts
 mandir = man
-prefix = /usr/local
+bindir = bin
+# prefix = /usr/local
+prefix = poop
+mans = $(addprefix $(mandir)/,*.1)
+srcfiles = $(addprefix $(srcdir)/,contacts.m)
 
-all: bin/contacts man
+# ronn/man variables
+rdate = `date +'%Y-%m-%d'`
+rmanual = BSD General Commands Manual
+rorg = protozoic
 
-bin/contacts:  $(srcdir)/contacts.m
+all: $(bindir)/contacts $(mans)
+
+# run xcodebuild if src has changed.  Make bin/ if it doesn't exist.
+$(bindir)/contacts: $(srcfiles) | $(bindir)
 	xcodebuild
-	-mkdir bin
 	mv build/Release/contacts bin/
 
-man: $(mandir)/contacts.1
+# make bin/
+$(bindir):
+	-mkdir $(bindir)
 
-$(mandir)/contacts.1: $(srcdir)/contacts.1
+# make man/
+$(mandir):
 	-mkdir $(mandir)
-	cp $(srcdir)/contacts.1 $(mandir)/
 
+# copy man files to man/ - make man/ if it doesn't exist.
+$(mandir)/%.1: $(srcdir)/%.1 | $(mandir)
+	cp $< $(mandir)/
+
+# install files to their proper locations.
 install: bin/contacts man
-	install bin/contacts $(prefix)/usr/bin
-	install -m 644 $(mandir)/contacts.1 $(prefix)/$(mandir)
+	-mkdir $(prefix)
+	-mkdir $(prefix)/bin
+	-mkdir -p $(prefix)/share/man
+	install $(bindir)/* $(prefix)/bin/
+	install -m 644 $(mandir)/* $(prefix)/share/$(mandir)/
+
+# make the man files from the ronn files if needed
+$(srcdir)/%.1: $(srcdir)/%.1.ronn
+	ronn -r --date=$(rdate) --manual="$(rmanual)" --organization="$(rorg)" $(srcdir)/$*.1.ronn
+
+# remove generated man files
+cleanroff: cleanman
+	-rm $(srcdir)/*.1
+
+# remove installed man files
+cleanman:
+	-rm -rf $(mandir)
 
 distclean: clean
 
-clean:
-	\rm -rf build
-	\rm -rf bin
-	\rm -rf $(mandir)
-	\rm -f *~
+clean: cleanman
+	-rm -rf build
+	-rm -rf bin
+	-rm -f *~
