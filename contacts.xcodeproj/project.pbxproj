@@ -28,6 +28,7 @@
 
 /* Begin PBXFileReference section */
 		1623591E15E164AD007BFA78 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = contacts/Info.plist; sourceTree = SOURCE_ROOT; };
+		1623592515E183DD007BFA78 /* contacts.1.ronn */ = {isa = PBXFileReference; lastKnownFileType = text; path = contacts.1.ronn; sourceTree = "<group>"; };
 		1662F77815DFDF7800DFCCCB /* contacts */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = contacts; sourceTree = BUILT_PRODUCTS_DIR; };
 		1662F77C15DFDF7800DFCCCB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1662F77F15DFDF7800DFCCCB /* contacts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = contacts.m; sourceTree = "<group>"; };
@@ -78,6 +79,7 @@
 		1662F77E15DFDF7800DFCCCB /* contacts */ = {
 			isa = PBXGroup;
 			children = (
+				1623592515E183DD007BFA78 /* contacts.1.ronn */,
 				1662F77F15DFDF7800DFCCCB /* contacts.m */,
 				1662F78315DFDF7900DFCCCB /* contacts.1 */,
 				1662F78115DFDF7800DFCCCB /* Supporting Files */,

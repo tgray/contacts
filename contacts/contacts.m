@@ -115,23 +115,24 @@ int main(int argc, const char * argv[])
         addressEnum = [peopleFound objectEnumerator];
         
         while (person = (ABPerson*)[addressEnum nextObject]) {
-            NSString *fullName = [NSString stringWithFormat:@"%@ %@",
+            NSString *fullNameStr = [NSString stringWithFormat:@"%@ %@",
                   [[person valueForProperty:kABFirstNameProperty] description],
                   [[person valueForProperty:kABLastNameProperty] description]];
+            NSString *nickStr = [NSString stringWithFormat:@"%@", [[person valueForProperty:kABNicknameProperty] description]];
             ABMultiValue *emails = [person valueForProperty: kABEmailProperty];
             int emailCount = (int)[emails count];
-            BOOL nameMatch = ([fullName rangeOfString:theArg options:NSCaseInsensitiveSearch].location != NSNotFound);
-            BOOL nickMatch = ([[person valueForProperty:kABNicknameProperty] rangeOfString:theArg options:NSCaseInsensitiveSearch].location != NSNotFound);
+            BOOL nameMatch = ([fullNameStr rangeOfString:theArg options:NSCaseInsensitiveSearch].location != NSNotFound);
+            BOOL nickMatch = ([nickStr rangeOfString:theArg options:NSCaseInsensitiveSearch].location != NSNotFound);
             if (nameMatch || nickMatch) {
                 for (i = 0; i < emailCount; i++ ) {
                     NSString *thisEmail = [emails valueAtIndex: i];
-                    printf("%s\t%s%s\n", [thisEmail UTF8String], [fullName UTF8String], [muttQueryStr UTF8String]);}
+                    printf("%s\t%s%s\n", [thisEmail UTF8String], [fullNameStr UTF8String], [muttQueryStr UTF8String]);}
             } else {
                 for (i = 0; i < emailCount; i++ ) {
                     NSString *thisEmail = [emails valueAtIndex: i];
                     BOOL emailMatch = ([thisEmail rangeOfString:theArg options:NSCaseInsensitiveSearch].location != NSNotFound);
                     if (emailMatch) {
-                        printf("%s\t%s%s\n", [thisEmail UTF8String], [fullName UTF8String], [muttQueryStr UTF8String]);
+                        printf("%s\t%s%s\n", [thisEmail UTF8String], [fullNameStr UTF8String], [muttQueryStr UTF8String]);
                     }
                 }
             }
