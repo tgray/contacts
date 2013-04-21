@@ -2,8 +2,7 @@ XCODEBUILD=/usr/bin/xcodebuild
 srcdir = contacts
 mandir = man
 bindir = bin
-# prefix = /usr/local
-prefix = poop
+prefix = /usr/local
 mans = $(addprefix $(mandir)/,*.1)
 srcfiles = $(addprefix $(srcdir)/,contacts.m)
 
