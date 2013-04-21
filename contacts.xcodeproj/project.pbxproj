@@ -6,12 +6,36 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		16BCB1BD1724183C002F740A /* Version Number Scripts */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 16BCB1BE1724183C002F740A /* Build configuration list for PBXAggregateTarget "Version Number Scripts" */;
+			buildPhases = (
+				16BCB1C11724184C002F740A /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Version Number Scripts";
+			productName = "Version Number Scripts";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		1662F77D15DFDF7800DFCCCB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1662F77C15DFDF7800DFCCCB /* Foundation.framework */; };
 		1662F78015DFDF7800DFCCCB /* contacts.m in Sources */ = {isa = PBXBuildFile; fileRef = 1662F77F15DFDF7800DFCCCB /* contacts.m */; };
 		1662F78415DFDF7900DFCCCB /* contacts.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1662F78315DFDF7900DFCCCB /* contacts.1 */; };
 		1662F78B15DFDFCB00DFCCCB /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1662F78A15DFDFCB00DFCCCB /* AddressBook.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		16BCB1C217241960002F740A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1662F76F15DFDF7800DFCCCB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 16BCB1BD1724183C002F740A;
+			remoteInfo = "Version Number Scripts";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		1662F77615DFDF7800DFCCCB /* CopyFiles */ = {
@@ -35,6 +59,7 @@
 		1662F78215DFDF7800DFCCCB /* contacts-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "contacts-Prefix.pch"; sourceTree = "<group>"; };
 		1662F78315DFDF7900DFCCCB /* contacts.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = contacts.1; sourceTree = "<group>"; };
 		1662F78A15DFDFCB00DFCCCB /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		16AA388317242DDA0097A235 /* Info-template.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-template.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +115,7 @@
 		1662F78115DFDF7800DFCCCB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				16AA388317242DDA0097A235 /* Info-template.plist */,
 				1623591E15E164AD007BFA78 /* Info.plist */,
 				1662F78215DFDF7800DFCCCB /* contacts-Prefix.pch */,
 			);
@@ -103,7 +129,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1662F78715DFDF7900DFCCCB /* Build configuration list for PBXNativeTarget "contacts" */;
 			buildPhases = (
-				1623590615E15D7E007BFA78 /* Run Script */,
 				1662F77415DFDF7800DFCCCB /* Sources */,
 				1662F77515DFDF7800DFCCCB /* Frameworks */,
 				1662F77615DFDF7800DFCCCB /* CopyFiles */,
@@ -111,6 +136,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				16BCB1C317241960002F740A /* PBXTargetDependency */,
 			);
 			name = contacts;
 			productName = contacts;
@@ -139,24 +165,25 @@
 			projectRoot = "";
 			targets = (
 				1662F77715DFDF7800DFCCCB /* contacts */,
+				16BCB1BD1724183C002F740A /* Version Number Scripts */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1623590615E15D7E007BFA78 /* Run Script */ = {
+		16BCB1C11724184C002F740A /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Run Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# https://gist.github.com/2622886#file_gistfile1.sh\n# Assumes that you tag versions with the version number (e.g., \"1.1\") and then the build number is\n# that plus the number of commits since the tag (e.g., \"1.1.17\")\n\necho \"Updating version/build number from git...\"\nplist=${PROJECT_DIR}/${INFOPLIST_FILE}\n\n# increment the build number (ie 115 to 116)\nversionnum=`git describe | awk '{split($0,a,\"-\"); print a[1]}'`\n#buildnum=`git describe | awk '{split($0,a,\"g\"); print a[1]}'`\n\nif [[ \"${versionnum}\" == \"\" ]]; then\n#echo \"No version number from git\"\n#exit 2\nversionnum='0.0'\nfi\n\nif [[ \"${buildnum}\" == \"\" ]]; then\n#echo \"No build number from git\"\n#exit 2\nbuildnum=`git rev-parse --short HEAD`\nfi\n\n/usr/libexec/Plistbuddy -c \"Set CFBundleShortVersionString $versionnum\" \"${plist}\"\necho \"Updated version number to $versionnum\"\n\n/usr/libexec/Plistbuddy -c \"Set CFBundleVersion $buildnum\" \"${plist}\"\necho \"Updated build number to $buildnum\"";
+			shellScript = "#!/bin/sh -\n\n# build data file that is included in the source\n# so we can automatically report Git repo information\n# in the application\n\nif [[ ! -d \".git\" ]]; then\nexit 0\nfi\n\necho \"Building file\"\n\n# cd ${PROJECT_DIR}/${PROJECT_NAME}\ngitDataFile=\"${CONFIGURATION_TEMP_DIR}/gitDataAutoGenerated.h\"\n\necho \"Get Information from system\"\n\n# Date and time that we are running this build\nbuildDate=`date \"+%F %H:%M:%S\"`\n\n# Current branch in use\ncurrentBranchTemp=`git rev-parse --abbrev-ref HEAD`\nif [ -n \"$currentBranchTemp\" ]\nthen\ncurrentBranch=$currentBranchTemp\nelse\ncurrentBranch=\"\"\nfi\n\n# Last hash from the current branch\nlastCommitHashTemp=`git rev-parse --short HEAD`\nif [ -n \"$lastCommitHashTemp\" ]\nthen\nlastCommitHash=$lastCommitHashTemp\nelse\nlastCommitHash=\"\"\nfi\n\n# Date and time of the last commit on this branch\nlastCommitDateTemp=`git log --pretty=format:\"%ad\" --date=short -1`\nif [ -n \"$\" ]\nthen\nlastCommitDate=$lastCommitDateTemp\nelse\nlastCommitDate=\"\"\nfi\n\n# Comment from the last commit on this branch\nlastCommitCommentTemp=`git log --pretty=format:\"%s\" -1`\nif [ -n \"$\" ]\nthen\nlastCommitComment=$lastCommitCommentTemp\nelse\nlastCommitComment=\"\"\nfi\n\n# Last tag applied to this branch\nlastRepoTagTemp=`git describe --abbrev=0 --tags`\nif [ -n \"$lastRepoTagTemp\" ]\nthen\nlastRepoTag=$lastRepoTagTemp\nelse\nlastRepoTag=\"0.0.0\"\nfi\n\n# Build the file with all the information in it\necho \"Create header file\"\n\necho \"//-----------------------------------------\" > $gitDataFile\necho \"// Auto generated file\" >> $gitDataFile\necho \"// Created $buildDate\" >> $gitDataFile\necho \"//-----------------------------------------\" >> $gitDataFile\necho \"\" >> $gitDataFile\necho \"#define BUILD_DATE              @ \\\"$buildDate\\\"\" >> $gitDataFile\necho \"#define GIT_CURRENT_BRANCH      @ \\\"$currentBranch\\\"\" >> $gitDataFile\necho \"#define GIT_LAST_COMMIT_HASH    @ \\\"$lastCommitHash\\\"\" >> $gitDataFile\necho \"#define GIT_LAST_COMMIT_DATE    @ \\\"$lastCommitDate\\\"\" >> $gitDataFile\necho \"#define GIT_LAST_COMMIT_COMMENT @ \\\"$lastCommitComment\\\"\" >> $gitDataFile\necho \"#define GIT_LAST_REPO_TAG       @ \\\"$lastRepoTag\\\"\" >> $gitDataFile\necho \"#define AUTOVERSION $lastRepoTag\" >> $gitDataFile\n\necho \"Create temporary Info.plist\"\n# Make my own Info.plist file\nPLIST=\"${PROJECT_DIR}/${PROJECT_NAME}/Info\"\ncp \"${PROJECT_DIR}/${PROJECT_NAME}/Info-template.plist\" ${PLIST}.plist\n\n# defaults write \"${PLIST}\" CFBundleShortVersionString ${lastRepoTag}\n# defaults write \"${PLIST}\" CFBundleVersion ${lastCommitHash}\n/usr/libexec/PlistBuddy -c \"Set CFBundleShortVersionString ${lastRepoTag}\" \"${PLIST}.plist\"\n/usr/libexec/PlistBuddy -c \"Set CFBundleVersion ${lastCommitHash}\" \"${PLIST}.plist\"\n\ndefaults read \"${PLIST}\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -170,6 +197,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		16BCB1C317241960002F740A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 16BCB1BD1724183C002F740A /* Version Number Scripts */;
+			targetProxy = 16BCB1C217241960002F740A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1662F78515DFDF7900DFCCCB /* Debug */ = {
@@ -227,11 +262,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "contacts/contacts-Prefix.pch";
 				INFOPLIST_FILE = contacts/Info.plist;
+				INFOPLIST_PREFIX_HEADER = "${PROJECT_DIR}/${PROJECT_NAME}/gitDataAutoGenerated.h";
+				INFOPLIST_PREPROCESS = NO;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(INFOPLIST_FILE)",
+					"\"$(INFOPLIST_FILE)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -243,12 +280,28 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "contacts/contacts-Prefix.pch";
 				INFOPLIST_FILE = contacts/Info.plist;
+				INFOPLIST_PREFIX_HEADER = "${PROJECT_DIR}/${PROJECT_NAME}/gitDataAutoGenerated.h";
+				INFOPLIST_PREPROCESS = NO;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(INFOPLIST_FILE)",
+					"\"$(INFOPLIST_FILE)\"",
 				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		16BCB1BF1724183C002F740A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		16BCB1C01724183C002F740A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -270,6 +323,15 @@
 			buildConfigurations = (
 				1662F78815DFDF7900DFCCCB /* Debug */,
 				1662F78915DFDF7900DFCCCB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		16BCB1BE1724183C002F740A /* Build configuration list for PBXAggregateTarget "Version Number Scripts" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				16BCB1BF1724183C002F740A /* Debug */,
+				16BCB1C01724183C002F740A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
