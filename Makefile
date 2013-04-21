@@ -61,9 +61,7 @@ cleanman:
 
 dist: all
 	-mkdir -p $(distdir)
-	git archive master | tar -x -C $(distdir)
-	-cp $(srcdir)/Info.plist $(distdir)/$(srcdir)/Info.plist
-	-cp Makefile $(distdir)/
+	git archive archive | tar -x -C $(distdir)
 	tar czf $(distdir).tgz $(distdir)
 	rm -rf $(distdir)
 
