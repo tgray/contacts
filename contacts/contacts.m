@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <AddressBook/AddressBook.h>
 
-void printAddresses(NSArray *resultsArray, NSString *theArg, NSString *muttQueryStr, BOOL emailPrint) {
+void printAddresses(NSArray *resultsArray, NSString *theArg, NSString *queryStr, BOOL emailPrint) {
     ABPerson *person;
     int i;
     BOOL emailMatch;
@@ -28,10 +28,10 @@ void printAddresses(NSArray *resultsArray, NSString *theArg, NSString *muttQuery
             if (emailPrint) {
                 emailMatch = ([thisEmail rangeOfString:theArg options:NSCaseInsensitiveSearch].location != NSNotFound);
                 if (emailMatch) {
-                    printf("%s\t%s%s\n", [thisEmail UTF8String], [fullNameStr UTF8String], [muttQueryStr UTF8String]);
+                    printf("%s\t%s%s\n", [thisEmail UTF8String], [fullNameStr UTF8String], [queryStr UTF8String]);
                 }
             } else {
-                printf("%s\t%s%s\n", [thisEmail UTF8String], [fullNameStr UTF8String], [muttQueryStr UTF8String]);
+                printf("%s\t%s%s\n", [thisEmail UTF8String], [fullNameStr UTF8String], [queryStr UTF8String]);
             }
         }
     }
@@ -42,9 +42,12 @@ int main(int argc, const char * argv[])
     
     @autoreleasepool {
         // set up some variables
-        NSString *muttQueryStr = @"";
         int i;
         NSString *theArg;
+        NSString *queryStr = @"";
+
+        // cli options
+        BOOL muttFormat;
 
         
         // get cli arguments
@@ -68,6 +71,9 @@ int main(int argc, const char * argv[])
                               nil];
         NSArray *formatArg = [NSArray arrayWithObjects: @"--format", @"-f",
                 nil];
+
+        NSArray *muttArg = [NSArray arrayWithObjects: @"--mutt", @"-m",
+                nil];
         
         // not enough arguments to continue
         if ([args count] <= 1) {
@@ -83,6 +89,11 @@ int main(int argc, const char * argv[])
                 // help
                 if ([helpArg containsObject: theArg] == YES) {
                     printf("%s", [usageStr UTF8String]);
+                    
+                    printf("  -h, --help        display this help\n");
+                    printf("  -v, --version     display version\n");
+                    /* printf("  -f, --format      format output\n"); */
+                    printf("  -m, --mutt        print results in mutt query compatible format\n");
                     return 0;
                 }
                 // version
@@ -93,6 +104,11 @@ int main(int argc, const char * argv[])
                 // format
                 else if ([formatArg containsObject: theArg] == YES) {
                     [indexesToRemove addIndex: i];
+                }
+                // mutt format
+                else if ([muttArg containsObject: theArg] == YES) {
+                    [indexesToRemove addIndex: i];
+                    muttFormat = true;
                 }
             }
         }
@@ -143,8 +159,11 @@ int main(int argc, const char * argv[])
                                      value:theArg
                                 comparison:kABContainsSubStringCaseInsensitive];
         
+        // perform our two searches, one for email...
         NSArray *emailsFound = [AB recordsMatchingSearchElement:emailSearch];
+        NSMutableArray *uniqueElementsEmail = [emailsFound mutableCopy];
         
+        // ... and one for everything else
         ABSearchElement *multiSearch = [ABSearchElement
                                         searchElementForConjunction:kABSearchOr
                                         children:
@@ -152,7 +171,6 @@ int main(int argc, const char * argv[])
                                          lastNameSearch, nicknameSearch,
                                          orgSearch, nil]];
         NSArray *peopleFound = [AB recordsMatchingSearchElement:multiSearch];
-        NSMutableArray *uniqueElementsEmail = [emailsFound mutableCopy];
         
         // We are going to remove any results that we found in non-email
         // properties from the email results.
@@ -162,10 +180,8 @@ int main(int argc, const char * argv[])
         // let's print the results where the string is found directly in the
         // email address first.  Then we will print the results where the
         // string is found in another property.
-        printAddresses(emailResults, theArg, muttQueryStr, true);
-        printAddresses(peopleFound, theArg, muttQueryStr, false);
+        printAddresses(emailResults, theArg, queryStr, true);
+        printAddresses(peopleFound, theArg, queryStr, false);
     }
     return 0;
 }
-
-
