@@ -8,8 +8,8 @@ mans = $(addprefix $(mandir)/,*.1)
 srcfiles = $(addprefix $(srcdir)/,contacts.m)
 
 # distribution variables
-VERSIONNUM:=$(shell git describe --abbrev=0 --tags)
-BUILDNUM:=$(shell git rev-parse --short HEAD)
+VERSIONNUM:=$(shell test -d .git && git describe --abbrev=0 --tags)
+BUILDNUM:=$(shell test -d .git && git rev-parse --short HEAD)
 distdir = $(project)-$(VERSIONNUM)
 
 # ronn/man variables
@@ -19,6 +19,9 @@ rorg = protozoic
 
 all: $(bindir)/contacts $(mans)
 
+test: 
+	echo $(VERSIONNUM)
+
 # run xcodebuild if src has changed.  Make bin/ if it doesn't exist.
 $(bindir)/contacts: $(srcfiles) | $(bindir)
 	xcodebuild
@@ -26,11 +29,11 @@ $(bindir)/contacts: $(srcfiles) | $(bindir)
 
 # make bin/
 $(bindir):
-	-mkdir $(bindir)
+	-mkdir -p $(bindir)
 
 # make man/
 $(mandir):
-	-mkdir $(mandir)
+	-mkdir -p $(mandir)
 
 # copy man files to man/ - make man/ if it doesn't exist.
 $(mandir)/%.1: $(srcdir)/%.1 | $(mandir)
@@ -38,8 +41,8 @@ $(mandir)/%.1: $(srcdir)/%.1 | $(mandir)
 
 # install files to their proper locations.
 install: bin/contacts man
-	-mkdir $(prefix)
-	-mkdir $(prefix)/bin
+	-mkdir -p $(prefix)
+	-mkdir -p $(prefix)/bin
 	-mkdir -p $(prefix)/share/man
 	install $(bindir)/* $(prefix)/bin/
 	install -m 644 $(mandir)/* $(prefix)/share/$(mandir)/
@@ -60,6 +63,7 @@ dist: all
 	-mkdir -p $(distdir)
 	git archive master | tar -x -C $(distdir)
 	-cp $(srcdir)/Info.plist $(distdir)/$(srcdir)/Info.plist
+	-cp Makefile $(distdir)/
 	tar czf $(distdir).tgz $(distdir)
 	rm -rf $(distdir)
 
@@ -69,7 +73,6 @@ clean: cleanman
 	-rm -rf build
 	-rm -rf bin
 	-rm -f *~
-	-rm -f $(srcdir)/Info.plist
 
 cleantgz:
 	-rm -f $(distdir).tgz
