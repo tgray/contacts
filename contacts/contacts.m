@@ -9,16 +9,45 @@
 #import <Foundation/Foundation.h>
 #import <AddressBook/AddressBook.h>
 
+void printAddresses(NSArray *resultsArray, NSString *theArg, NSString *queryStr, BOOL emailPrint) {
+    ABPerson *person;
+    int i;
+    BOOL emailMatch;
+
+    NSEnumerator *results = [resultsArray objectEnumerator];
+    while (person = (ABPerson*)[results nextObject]) {
+        
+        
+        NSString *fullNameStr = [NSString stringWithFormat:@"%@ %@",
+                                 [[person valueForProperty:kABFirstNameProperty] description],
+                                 [[person valueForProperty:kABLastNameProperty] description]];
+        ABMultiValue *emails = [person valueForProperty: kABEmailProperty];
+        int emailCount = (int)[emails count];
+        for (i = 0; i < emailCount; i++ ) {
+            NSString *thisEmail = [emails valueAtIndex: i];
+            if (emailPrint) {
+                emailMatch = ([thisEmail rangeOfString:theArg options:NSCaseInsensitiveSearch].location != NSNotFound);
+                if (emailMatch) {
+                    printf("%s\t%s%s\n", [thisEmail UTF8String], [fullNameStr UTF8String], [queryStr UTF8String]);
+                }
+            } else {
+                printf("%s\t%s%s\n", [thisEmail UTF8String], [fullNameStr UTF8String], [queryStr UTF8String]);
+            }
+        }
+    }
+}
+
 int main(int argc, const char * argv[])
 {
     
     @autoreleasepool {
         // set up some variables
-        NSEnumerator *addressEnum;
-        ABPerson *person;
         int i;
-        NSString *muttQueryStr = @"";
         NSString *theArg;
+        NSString *queryStr = @"";
+
+        // cli options
+        BOOL muttFormat = false;
 
         
         // get cli arguments
@@ -42,6 +71,9 @@ int main(int argc, const char * argv[])
                               nil];
         NSArray *formatArg = [NSArray arrayWithObjects: @"--format", @"-f",
                 nil];
+
+        NSArray *muttArg = [NSArray arrayWithObjects: @"--mutt", @"-m",
+                nil];
         
         // not enough arguments to continue
         if ([args count] <= 1) {
@@ -57,6 +89,11 @@ int main(int argc, const char * argv[])
                 // help
                 if ([helpArg containsObject: theArg] == YES) {
                     printf("%s", [usageStr UTF8String]);
+                    
+                    printf("  -h, --help        display this help\n");
+                    printf("  -v, --version     display version\n");
+                    /* printf("  -f, --format      format output\n"); */
+                    printf("  -m, --mutt        print results in mutt query compatible format\n");
                     return 0;
                 }
                 // version
@@ -67,6 +104,11 @@ int main(int argc, const char * argv[])
                 // format
                 else if ([formatArg containsObject: theArg] == YES) {
                     [indexesToRemove addIndex: i];
+                }
+                // mutt format
+                else if ([muttArg containsObject: theArg] == YES) {
+                    [indexesToRemove addIndex: i];
+                    muttFormat = true;
                 }
             }
         }
@@ -109,37 +151,42 @@ int main(int argc, const char * argv[])
                                        key:nil
                                      value:theArg
                                 comparison:kABContainsSubStringCaseInsensitive];
-        ABSearchElement *multiSearch = [ABSearchElement searchElementForConjunction:kABSearchOr children: [NSArray arrayWithObjects:firstNameSearch, lastNameSearch, nicknameSearch, emailSearch, nil]];
+
+        ABSearchElement *orgSearch =
+        [ABPerson searchElementForProperty:kABOrganizationProperty
+                                     label:nil
+                                       key:nil
+                                     value:theArg
+                                comparison:kABContainsSubStringCaseInsensitive];
         
+        // perform our two searches, one for email...
+        NSArray *emailsFound = [AB recordsMatchingSearchElement:emailSearch];
+        NSMutableArray *uniqueElementsEmail = [emailsFound mutableCopy];
+        
+        // ... and one for everything else
+        ABSearchElement *multiSearch = [ABSearchElement
+                                        searchElementForConjunction:kABSearchOr
+                                        children:
+                                        [NSArray arrayWithObjects:firstNameSearch,
+                                         lastNameSearch, nicknameSearch,
+                                         orgSearch, nil]];
         NSArray *peopleFound = [AB recordsMatchingSearchElement:multiSearch];
-        addressEnum = [peopleFound objectEnumerator];
         
-        while (person = (ABPerson*)[addressEnum nextObject]) {
-            NSString *fullNameStr = [NSString stringWithFormat:@"%@ %@",
-                  [[person valueForProperty:kABFirstNameProperty] description],
-                  [[person valueForProperty:kABLastNameProperty] description]];
-            NSString *nickStr = [NSString stringWithFormat:@"%@", [[person valueForProperty:kABNicknameProperty] description]];
-            ABMultiValue *emails = [person valueForProperty: kABEmailProperty];
-            int emailCount = (int)[emails count];
-            BOOL nameMatch = ([fullNameStr rangeOfString:theArg options:NSCaseInsensitiveSearch].location != NSNotFound);
-            BOOL nickMatch = ([nickStr rangeOfString:theArg options:NSCaseInsensitiveSearch].location != NSNotFound);
-            if (nameMatch || nickMatch) {
-                for (i = 0; i < emailCount; i++ ) {
-                    NSString *thisEmail = [emails valueAtIndex: i];
-                    printf("%s\t%s%s\n", [thisEmail UTF8String], [fullNameStr UTF8String], [muttQueryStr UTF8String]);}
-            } else {
-                for (i = 0; i < emailCount; i++ ) {
-                    NSString *thisEmail = [emails valueAtIndex: i];
-                    BOOL emailMatch = ([thisEmail rangeOfString:theArg options:NSCaseInsensitiveSearch].location != NSNotFound);
-                    if (emailMatch) {
-                        printf("%s\t%s%s\n", [thisEmail UTF8String], [fullNameStr UTF8String], [muttQueryStr UTF8String]);
-                    }
-                }
-            }
+        // We are going to remove any results that we found in non-email
+        // properties from the email results.
+        [uniqueElementsEmail removeObjectsInArray:peopleFound];
+        
+        NSArray *emailResults = [NSArray arrayWithArray: uniqueElementsEmail];
+        // let's print the results where the string is found directly in the
+        // email address first.  Then we will print the results where the
+        // string is found in another property.
+        
+        if (muttFormat ) {
+            printf("Results:\n");
         }
-        
+
+        printAddresses(emailResults, theArg, queryStr, true);
+        printAddresses(peopleFound, theArg, queryStr, false);
     }
     return 0;
 }
-
-

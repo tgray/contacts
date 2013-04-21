@@ -18,3 +18,6 @@ The options are as follows:
 
 * `-v`, `--version`:
   Display version and build number.
+
+* `-m`, `--mutt`:
+  Print results in a mutt query compatible format.
