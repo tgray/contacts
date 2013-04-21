@@ -47,7 +47,7 @@ int main(int argc, const char * argv[])
         NSString *queryStr = @"";
 
         // cli options
-        BOOL muttFormat;
+        BOOL muttFormat = false;
 
         
         // get cli arguments
@@ -180,6 +180,11 @@ int main(int argc, const char * argv[])
         // let's print the results where the string is found directly in the
         // email address first.  Then we will print the results where the
         // string is found in another property.
+        
+        if (muttFormat ) {
+            printf("Results:\n");
+        }
+
         printAddresses(emailResults, theArg, queryStr, true);
         printAddresses(peopleFound, theArg, queryStr, false);
     }
