@@ -1,10 +1,16 @@
 XCODEBUILD=/usr/bin/xcodebuild
+project = contacts
 srcdir = contacts
 mandir = man
 bindir = bin
 prefix = /usr/local
 mans = $(addprefix $(mandir)/,*.1)
 srcfiles = $(addprefix $(srcdir)/,contacts.m)
+
+# distribution variables
+VERSIONNUM:=$(shell git describe --abbrev=0 --tags)
+BUILDNUM:=$(shell git rev-parse --short HEAD)
+distdir = $(project)-$(VERSIONNUM)
 
 # ronn/man variables
 rdate = `date +'%Y-%m-%d'`
@@ -50,9 +56,20 @@ cleanroff: cleanman
 cleanman:
 	-rm -rf $(mandir)
 
-distclean: clean
+dist: all
+	-mkdir -p $(distdir)
+	git archive master | tar -x -C $(distdir)
+	-cp $(srcdir)/Info.plist $(distdir)/$(srcdir)/Info.plist
+	tar czf $(distdir).tgz $(distdir)
+	rm -rf $(distdir)
+
+distclean: clean cleantgz
 
 clean: cleanman
 	-rm -rf build
 	-rm -rf bin
 	-rm -f *~
+	-rm -f $(srcdir)/Info.plist
+
+cleantgz:
+	-rm -f $(distdir).tgz
