@@ -4,7 +4,7 @@ srcdir = contacts
 mansubdir = man
 binsubdir = bin
 prefix ?= /usr/local
-mandir ?= $(prefix)/share/$(mansubdir)/man1
+mandir ?= $(prefix)/share/$(mansubdir)/man1/
 mans = $(addprefix $(mansubdir)/,*.1)
 srcfiles = $(addprefix $(srcdir)/,contacts.m)
 
