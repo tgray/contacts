@@ -4,7 +4,7 @@ srcdir = contacts
 mansubdir = man
 binsubdir = bin
 prefix ?= /usr/local
-mandir ?= $(prefix)/share/$(mansubdir)/man1/
+mandir ?= $(prefix)/share/$(mansubdir)/man1
 mans = $(addprefix $(mansubdir)/,*.1)
 srcfiles = $(addprefix $(srcdir)/,contacts.m)
 
@@ -48,9 +48,9 @@ $(mansubdir)/%.1: $(srcdir)/%.1 | $(mansubdir)
 install: bin/contacts man
 	-mkdir -p $(prefix)
 	-mkdir -p $(prefix)/bin
-	-mkdir -p $(prefix)/share/man
+	-mkdir -p $(mandir)
 	install $(binsubdir)/* $(prefix)/bin/
-	install -m 644 $(mansubdir)/* ${mandir}
+	install -m 644 $(mansubdir)/* $(mandir)
 
 # make the man files from the ronn files if needed
 $(srcdir)/%.1: $(srcdir)/%.1.ronn
