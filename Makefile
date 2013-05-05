@@ -4,7 +4,7 @@ srcdir = contacts
 mansubdir = man
 binsubdir = bin
 prefix ?= /usr/local
-mandir ?= $(prefix)/share/$(mansubdir)/
+mandir ?= $(prefix)/share/$(mansubdir)/man1
 mans = $(addprefix $(mansubdir)/,*.1)
 srcfiles = $(addprefix $(srcdir)/,contacts.m)
 
@@ -15,10 +15,12 @@ distdir = $(project)-$(VERSIONNUM)
 
 # ronn/man variables
 rdate = `date +'%Y-%m-%d'`
-rmanual = BSD General Commands Manual
+rmanual = contacts
 rorg = protozoic
 
-all: $(binsubdir)/contacts $(mans)
+all: $(binsubdir)/contacts docs
+
+docs: $(mans)
 
 test: 
 	echo $(VERSIONNUM)
