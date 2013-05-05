@@ -27,7 +27,7 @@ Easy!
 
 Alternately, I'm working on getting this into homebrew, but for now you can install it from my github formula repository (beware of the other formula...).
 
-    brew install https://raw.github.com/tgray/homebrew-tgbrew/master/contacts.rb
+    brew install https://raw.github.com/tgray/homebrew-tgbrew/master/contacts2.rb
 
 ## Configuring ##
 
