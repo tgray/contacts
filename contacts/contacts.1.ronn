@@ -3,7 +3,7 @@ contacts(1) -- Command line interface to OS X Address Book.
 
 ## SYNOPSIS ##
 
-`contacts` [`-h`] [`-v`] <query>  
+`contacts` [`-h`] [`-v`] [`-m`] <query>  
 
 ## DESCRIPTION ##
 
