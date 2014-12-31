@@ -21,3 +21,6 @@ The options are as follows:
 
 * `-m`, `--mutt`:
   Print results in a mutt query compatible format.
+
+* `-g`, `--group`:
+  Prints all email addresses of the members of search for group.  The search term must be exact.

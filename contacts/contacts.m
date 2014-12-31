@@ -37,6 +37,32 @@ void printAddresses(NSArray *resultsArray, NSString *theArg, NSString *queryStr,
     }
 }
 
+void printGroups(NSArray *resultsArray) {
+    NSMutableArray* people = [[NSMutableArray alloc] init];
+    int groupCount = (int)[resultsArray count] - 1;
+    while ( groupCount >= 0 ) {
+        NSArray* members = [ [resultsArray objectAtIndex:groupCount] members ];
+        [ people addObjectsFromArray : members ];
+        groupCount--;
+    }
+    
+    int count = (int)[people count];
+    int i;
+    int j;
+    for (i = 0; i < count; i++) {
+        ABPerson * person = [people objectAtIndex:i];
+        ABMultiValue *emails = [person valueForProperty: kABEmailProperty];
+
+        int emailCount = (int)[emails count];
+        for (j = 0; j < emailCount; j++ ) {
+            NSString *thisEmail = [emails valueAtIndex: j];
+            printf("%s ", [thisEmail UTF8String]);
+        }
+    }
+
+}
+
+
 int main(int argc, const char * argv[])
 {
     
@@ -48,6 +74,7 @@ int main(int argc, const char * argv[])
 
         // cli options
         BOOL muttFormat = false;
+        BOOL groupList = false;
 
         
         // get cli arguments
@@ -74,6 +101,9 @@ int main(int argc, const char * argv[])
 
         NSArray *muttArg = [NSArray arrayWithObjects: @"--mutt", @"-m",
                 nil];
+
+        NSArray *groupArg = [NSArray arrayWithObjects: @"--group", @"-g",
+                            nil];
         
         // not enough arguments to continue
         if ([args count] <= 1) {
@@ -94,6 +124,7 @@ int main(int argc, const char * argv[])
                     printf("  -v, --version     display version\n");
                     /* printf("  -f, --format      format output\n"); */
                     printf("  -m, --mutt        print results in mutt query compatible format\n");
+                    printf("  -g, --group        prints email address of GROUP members\n");
                     return 0;
                 }
                 // version
@@ -109,6 +140,11 @@ int main(int argc, const char * argv[])
                 else if ([muttArg containsObject: theArg] == YES) {
                     [indexesToRemove addIndex: i];
                     muttFormat = true;
+                }
+                // groups format
+                else if ([groupArg containsObject: theArg] == YES) {
+                    [indexesToRemove addIndex: i];
+                    groupList = true;
                 }
             }
         }
@@ -158,7 +194,20 @@ int main(int argc, const char * argv[])
                                        key:nil
                                      value:theArg
                                 comparison:kABContainsSubStringCaseInsensitive];
+
+        ABSearchElement *groupSearch =
+        [ABGroup searchElementForProperty:kABGroupNameProperty
+                                     label:nil
+                                       key:nil
+                                     value:theArg
+                                comparison:kABEqualCaseInsensitive];
         
+        
+        if (groupList) {
+            NSArray *groupsFound = [AB recordsMatchingSearchElement:groupSearch];
+            printGroups(groupsFound);
+            
+        } else {
         // perform our two searches, one for email...
         NSArray *emailsFound = [AB recordsMatchingSearchElement:emailSearch];
         NSMutableArray *uniqueElementsEmail = [emailsFound mutableCopy];
@@ -187,6 +236,7 @@ int main(int argc, const char * argv[])
 
         printAddresses(emailResults, theArg, queryStr, true);
         printAddresses(peopleFound, theArg, queryStr, false);
+        }
     }
     return 0;
 }
