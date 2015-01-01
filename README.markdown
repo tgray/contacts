@@ -4,7 +4,7 @@
 
 ## Overview ##
 
-`contacts` is a quick an easy way to search the OS X Address Book from the command line.  An eventual goal is to fully replace the now unmaintained program of the [same name][theotherguy].  In its early forms, functionality is limited to providing input for a [mutt address query][muttquerydoc].
+`contacts` is a quick an easy way to search the OS X Address Book from the command line.  An eventual goal is to fully replace the now unmaintained program of the [same name][theotherguy].  Functionality is currently limited to providing input for a [mutt address query][muttquerydoc] and for outputting alias and group entries for mutt.  
 
 [theotherguy]: http://gnufoo.org/contacts/
 [muttquerydoc]: http://dev.mutt.org/trac/wiki/QueryCommand
@@ -17,6 +17,9 @@ This returns all matches for *somename* in your address book in a simple format:
 
     name    email
 
+`contacts` can also output alias and group entries for inclusion in your mutt rc file.See the man file for more detail.
+
+    contacts -a --all
 
 ## Installing ##
 
