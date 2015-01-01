@@ -7,7 +7,11 @@ contacts(1) -- Command line interface to OS X Address Book.
 
 ## DESCRIPTION ##
 
-`contacts` is a command line program for interfacing with the Mac OS X Address Book database.  The required argument *query* is the search term.  Results are displayed one to a line with email address first followed by name.  First name, last name, nickname, and email addresses are currently searched.
+`contacts` is a command line program for interfacing with the Mac OS X Address Book database.  The required argument *query* is the search term.  Results are displayed one to a line with email address first followed by the name.  First name, last name, nickname, and email addresses are currently searched.
+
+`contacts` can also output the members of Address Book groups.
+
+`contacts` is designed to be used in conjunction with `muttqt`, the mutt query tool (see [REFERENCES][]).
 
 ## OPTIONS ##
 
@@ -19,8 +23,58 @@ The options are as follows:
 * `-v`, `--version`:
   Display version and build number.
 
-* `-m`, `--mutt`:
-  Print results in a mutt query compatible format.
+* `-a`, `--alias`:
+  Prints results in mutt alias or address group format.  This is useful for outputting all or some of your Address Book contacts for inclusion into your mutt rc files.
+
+* `--all`
+  Prints all Address Book entries.
 
 * `-g`, `--group`:
-  Prints all email addresses of the members of search for group.  The search term must be exact.
+  Prints all email addresses of the members of search for group.  The search term must be exact.  For groups with spaces or non-alphanumeric characters, enclose in quotes.  If no search term is entered, `contacts` will print all groups.
+
+  When used in conjunction with the `-a` or `--alias` option, `contacts` will output the results in mutt address group format.
+
+* `-m`, `--mutt`:
+  Print results in a mutt query compatible format.  This merely adds a header line to the results.
+  
+## EXAMPLES ##
+
+- Search for any contact that has 'mike' in it.
+
+  contacts mike
+
+- Search for any contact that has 'mike' in it with mutt query compatible output.
+
+  contacts -m mike
+
+- Output the addresses which are part of the 'work' group.
+
+  contacts -g work
+
+- Output all contacts in mutt compatible alias format for inclusion in a mutt rc file.
+ 
+  contacts -a --all
+
+- Output all groups in mutt compatible address group format for inclusion in a mutt rc file.
+
+  contacts -a -g --all
+
+
+### Mutt rc examples ###
+
+The following lines can be included in your .muttrc file.
+
+- To source all contacts into a mutt compatible alias file on the fly:
+  
+  source \`contacts -a --all > ~/.mutt/aliases-ab; echo ~/.mutt/aliases-ab\`
+  
+- To source all groups into a mutt compatible file on the fly.
+
+  source \`contacts -a -g --all > ~/.mutt/aliases-abgroups; echo ~/.mutt/aliases-abgroups\`
+  
+`contacts` is designed to be used in conjunction with `muttqt`, the mutt query tool.  For information on how to integrate `contacts` with `muttqt` and mutt, see the `muttqt` project page in [REFERENCES][].
+  
+## REFERENCES ##
+
+- `contacts` project page - <https://github.com/tgray/contacts>
+- `muttqt` - <http://tgray.github.io/muttqt/>

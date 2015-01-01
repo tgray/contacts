@@ -1,1 +1,4 @@
 contacts/Info.plist
+bin/
+build/
+man/
