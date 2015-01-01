@@ -84,31 +84,31 @@ void printAddresses(NSArray *resultsArray, NSString *theArg, NSString *queryStr,
     }
 }
 
-void printGroupsOld(NSString *theGroup, NSArray *resultsArray, BOOL aliasPrint) {
-    NSMutableArray* people = [[NSMutableArray alloc] init];
-    int groupCount = (int)[resultsArray count] - 1;
-    while ( groupCount >= 0 ) {
-        NSArray* members = [ [resultsArray objectAtIndex:groupCount] members ];
-        [ people addObjectsFromArray : members ];
-        groupCount--;
-    }
-    if (aliasPrint) {
-        printf("group -group %s -addr ", [theGroup UTF8String]);
-    }
-    int count = (int)[people count];
-    int i;
-    int j;
-    for (i = 0; i < count; i++) {
-        ABPerson * person = [people objectAtIndex:i];
-        ABMultiValue *emails = [person valueForProperty: kABEmailProperty];
-
-        int emailCount = (int)[emails count];
-        for (j = 0; j < emailCount; j++ ) {
-            NSString *thisEmail = [emails valueAtIndex: j];
-            printf("%s ", [thisEmail UTF8String]);
-        }
-    }
-}
+//void printGroupsOld(NSString *theGroup, NSArray *resultsArray, BOOL aliasPrint) {
+//    NSMutableArray* people = [[NSMutableArray alloc] init];
+//    int groupCount = (int)[resultsArray count] - 1;
+//    while ( groupCount >= 0 ) {
+//        NSArray* members = [ [resultsArray objectAtIndex:groupCount] members ];
+//        [ people addObjectsFromArray : members ];
+//        groupCount--;
+//    }
+//    if (aliasPrint) {
+//        printf("group -group %s -addr ", [theGroup UTF8String]);
+//    }
+//    int count = (int)[people count];
+//    int i;
+//    int j;
+//    for (i = 0; i < count; i++) {
+//        ABPerson * person = [people objectAtIndex:i];
+//        ABMultiValue *emails = [person valueForProperty: kABEmailProperty];
+//
+//        int emailCount = (int)[emails count];
+//        for (j = 0; j < emailCount; j++ ) {
+//            NSString *thisEmail = [emails valueAtIndex: j];
+//            printf("%s ", [thisEmail UTF8String]);
+//        }
+//    }
+//}
 
 //void printGroups3(NSArray *resultsArray, BOOL aliasPrint) {
 //    NSMutableArray* people = [[NSMutableArray alloc] init];
