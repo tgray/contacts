@@ -37,7 +37,7 @@ As of this time, there is no configuration.
 
 As stated previously, eventually `contacts` will be a full fledged replacement for the *other* [`contacts`][theotherguy].  For now, it isn't.  What it does do is intelligently search your Address Book and format the output so you can use it for the input of a mutt query call.
 
-It is designed to be used with `[muttqt]`, a mutt query tool, which wraps `contacts` as well as manages other address query sources.
+It is designed to be used with [`muttqt`][muttqt], a mutt query tool, which wraps `contacts` as well as manages other address query sources.
 
 [muttqt]: https://github.com/tgray/muttqt
 
