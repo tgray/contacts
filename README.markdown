@@ -36,6 +36,10 @@ Alternately, I'm working on getting this into homebrew, but for now you can inst
 
 As of this time, there is no configuration.
 
+### tmux usage ###
+
+This is not an exhaustive note on how to use with tmux, as I don't use tmux.  However, some users have seen success with `reattach-to-user-namespace`.  See [https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard](https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard).  I'd suggest installing via `brew install reattach-to-user-namespace`.
+
 ## Other ##
 
 As stated previously, eventually `contacts` will be a full fledged replacement for the *other* [`contacts`][theotherguy].  For now, it isn't.  What it does do is intelligently search your Address Book and format the output so you can use it for the input of a mutt query call.
