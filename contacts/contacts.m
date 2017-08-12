@@ -52,11 +52,11 @@ void printAddresses(NSArray *resultsArray, NSString *theArg, NSString *queryStr,
                 emailMatch = ([thisEmail rangeOfString:theArg options:NSCaseInsensitiveSearch].location != NSNotFound);
                 if (emailMatch) {
                     if (aliasPrint) {
-                        printf("alias %s\t%s <%s>%s\n", [slugName(fullNameStr, i) UTF8String],
+                        printf("alias %s\t%s <%s>%s\n", [slugName(fullNameStr, i+1) UTF8String],
                                [fullNameStr UTF8String], [thisEmail UTF8String],
                                [queryStr UTF8String]);
                         if (nickStr) {
-                            printf("alias %s\t%s <%s>%s\n", [slugName(nickStr, i) UTF8String],
+                            printf("alias %s\t%s <%s>%s\n", [slugName(nickStr, i+1) UTF8String],
                                    [fullNameStr UTF8String], [thisEmail UTF8String],
                                    [queryStr UTF8String]);
                         }
@@ -66,11 +66,11 @@ void printAddresses(NSArray *resultsArray, NSString *theArg, NSString *queryStr,
                 }
             } else {
                 if (aliasPrint) {
-                    printf("alias %s\t%s <%s>%s\n", [slugName(fullNameStr, i) UTF8String],
+                    printf("alias %s\t%s <%s>%s\n", [slugName(fullNameStr, i+1) UTF8String],
                            [fullNameStr UTF8String], [thisEmail UTF8String],
                            [queryStr UTF8String]);
                     if (nickStr) {
-                        printf("alias %s\t%s <%s>%s\n", [slugName(nickStr, i) UTF8String],
+                        printf("alias %s\t%s <%s>%s\n", [slugName(nickStr, i+1) UTF8String],
                                [fullNameStr UTF8String], [thisEmail UTF8String],
                                [queryStr UTF8String]);
                     }
