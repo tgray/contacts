@@ -29,7 +29,7 @@ test:
 
 # run xcodebuild if src has changed.  Make bin/ if it doesn't exist.
 $(binsubdir)/contacts: $(srcfiles) | $(binsubdir) version
-	./version.sh $(srcdir)/version.json
+	./version-update.sh $(srcdir)/version.json
 	swift build -c release
 	mv .build/release/contacts bin/
 
@@ -67,7 +67,7 @@ cleanman:
 
 dist: all
 	-mkdir -p $(distdir)
-	git archive main | tar -x -C $(distdir)
+	git archive develop | tar -x -C $(distdir)
 	tar czf $(distdir).tgz $(distdir)
 	rm -rf $(distdir)
 

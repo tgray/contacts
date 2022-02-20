@@ -1,7 +1,7 @@
 #!/bin/sh -
 
 if [[ ! -d ".git" ]]; then
-    # version=`cat VERSION | grep version | awk '{print $2}'`
+#     version=`cat VERSION | grep version | awk '{print $2}'`
     commit=`cat VERSION | grep commit | awk '{print $2}'`
 else
     echo "Getting information from git"

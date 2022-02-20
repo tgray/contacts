@@ -1,2 +1,3 @@
 version: 0.3.0
 commit: $Format:%h$
+gitversion: $Format:%describe:tags$
