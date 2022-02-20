@@ -1,6 +1,6 @@
 # contacts #
 
-`contacts` is a command line interface to the Mac OS X Address Book.
+`contacts` is a command line interface to Contacts in macOS.  This used to be the Mac OS X Address Book.
 
 ## Overview ##
 
@@ -31,6 +31,12 @@ Easy!
 Alternately, I'm working on getting this into homebrew, but for now you can install it from my github formula repository (beware of the other formula...).
 
     brew install https://raw.github.com/tgray/homebrew-tgbrew/master/contacts2.rb
+
+## Dependencies
+
+As of version 0.3.0, `contacts` is written in Swift.  Building is via `swift build`, but it is all managed by the Makefile.  There is one dependency that should be downloaded automatically.  macOS 10.15 is listed as the minimum OS.
+
+It should be known that I do not know what I am doing, so buyer beware.
 
 ## Configuring ##
 
