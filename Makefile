@@ -27,11 +27,9 @@ test:
 	echo ${prefix}
 	echo ${mandir}
 
-version: $(versionfiles)
-	./version.sh $(srcdir)/version.json
-
 # run xcodebuild if src has changed.  Make bin/ if it doesn't exist.
 $(binsubdir)/contacts: $(srcfiles) | $(binsubdir) version
+	./version.sh $(srcdir)/version.json
 	swift build -c release
 	mv .build/release/contacts bin/
 
