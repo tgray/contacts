@@ -1,5 +1,5 @@
 project = contacts
-srcdir = Sources/contacts
+srcdir = Sources/contacts-cli
 mansubdir = man
 binsubdir = bin
 prefix ?= /usr/local
@@ -18,7 +18,7 @@ rdate = `date +'%Y-%m-%d'`
 rmanual = contacts
 rorg = protozoic
 
-all: $(binsubdir)/contacts docs
+all: docs $(binsubdir)/contacts 
 
 docs: $(mans)
 
