@@ -1,12 +1,12 @@
-XCODEBUILD=/usr/bin/xcodebuild
 project = contacts
-srcdir = contacts
+srcdir = Sources/contacts
 mansubdir = man
 binsubdir = bin
 prefix ?= /usr/local
 mandir ?= $(prefix)/share/$(mansubdir)/man1
 mans = $(addprefix $(mansubdir)/,*.1)
-srcfiles = $(addprefix $(srcdir)/,contacts.m)
+srcfiles = $(addprefix $(srcdir)/,main.swift)
+versionfiles = $(addprefix $(srcdir)/,version.json)
 
 # distribution variables
 VERSIONNUM:=$(shell test -d .git && git describe --abbrev=0 --tags)
@@ -27,10 +27,13 @@ test:
 	echo ${prefix}
 	echo ${mandir}
 
+version: $(versionfiles)
+	./version.sh $(srcdir)/version.json
+
 # run xcodebuild if src has changed.  Make bin/ if it doesn't exist.
-$(binsubdir)/contacts: $(srcfiles) | $(binsubdir)
-	xcodebuild
-	mv build/Release/contacts bin/
+$(binsubdir)/contacts: $(srcfiles) | $(binsubdir) version
+	swift build -c release
+	mv .build/release/contacts bin/
 
 # make bin/
 $(binsubdir):
@@ -66,7 +69,7 @@ cleanman:
 
 dist: all
 	-mkdir -p $(distdir)
-	git archive master | tar -x -C $(distdir)
+	git archive main | tar -x -C $(distdir)
 	tar czf $(distdir).tgz $(distdir)
 	rm -rf $(distdir)
 
