@@ -67,6 +67,12 @@ cleanman:
 
 dist: all
 	-mkdir -p $(distdir)
+	git archive master | tar -x -C $(distdir)
+	tar czf $(distdir).tgz $(distdir)
+	rm -rf $(distdir)
+
+distdev: all
+	-mkdir -p $(distdir)
 	git archive develop | tar -x -C $(distdir)
 	tar czf $(distdir).tgz $(distdir)
 	rm -rf $(distdir)

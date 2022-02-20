@@ -1,8 +1,9 @@
 #!/bin/sh -
 
 if [[ ! -d ".git" ]]; then
-    version=`cat VERSION | grep version | awk '{print $2}'`
+    version=`cat VERSION | grep "^version" | awk '{print $2}'`
     commit=`cat VERSION | grep commit | awk '{print $2}'`
+    version=`cat VERSION | grep "^gitdescribe" | sed -E 's/.*tag: ([^\)]+)\)/\1/'`
 else
     echo "Getting information from git"
 
