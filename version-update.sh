@@ -3,7 +3,7 @@
 if [[ ! -d ".git" ]]; then
     version=`cat VERSION | grep "^version" | awk '{print $2}'`
     commit=`cat VERSION | grep commit | awk '{print $2}'`
-    version=`cat VERSION | grep "^gitdescribe" | sed -E 's/.*tag: ([^\)]+)\)/\1/'`
+#     version=`cat VERSION | grep "^gitdescribe" | sed -E 's/.*tag: ([^\)]+)\)/\1/'`
 else
     echo "Getting information from git"
 
@@ -11,6 +11,7 @@ else
     if [ -n "$describe" ]
     then
         version=`echo $describe | cut -d '-' -f1`
+        version=`cat VERSION | grep "^version" | awk '{print $2}'`
         delta=`echo $describe | cut -d '-' -f2`
         commit=`echo $describe | cut -d '-' -f3 | cut -c2-`
         dirty=`echo $describe | cut -d '-' -f4`

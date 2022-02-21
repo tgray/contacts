@@ -32,7 +32,7 @@ struct ContactsOptions: ParsableArguments {
   help: "display version"
   ) var version = false  
   
-  @Argument var searchTerm: String?
+  @Argument var searchTerm: String = ""
 }
 
 let options = ContactsOptions.parseOrExit()
@@ -88,6 +88,12 @@ func slugName(name: String, n: Int) -> String {
 // Get the search term, set up the contact store, and keys to fetch
 var searchTerm = options.searchTerm
 
+// If searchTerm is empty and the --all switch wasn't used, exit
+if searchTerm == "" && !options.all {
+  print("Error: Missing expected argument '<search-term>'")
+  exit(1)
+}
+
 let store = CNContactStore()
 let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey,
   CNContactNicknameKey, CNContactEmailAddressesKey,
@@ -122,7 +128,7 @@ if options.group {
     if options.all {
       groupresults = groups
     } else {
-      if g.name.lowercased().contains(searchTerm!.lowercased()) {
+      if g.name.lowercased().contains(searchTerm.lowercased()) {
         groupresults.append(g)
       }
     }
@@ -163,7 +169,7 @@ var stringToSearch = ""
       if options.all {
         results = contacts
       } else {
-        if stringToSearch.lowercased().contains(searchTerm!.lowercased()) {
+        if stringToSearch.lowercased().contains(searchTerm.lowercased()) {
           if !results.contains(c) {
             results.append(c)
           }

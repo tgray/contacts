@@ -1,7 +1,7 @@
 import XCTest
 import class Foundation.Bundle
 
-final class peepsTests: XCTestCase {
+final class contactsTests: XCTestCase {
     func testExample() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
@@ -15,7 +15,7 @@ final class peepsTests: XCTestCase {
         // Mac Catalyst won't have `Process`, but it is supported for executables.
         #if !targetEnvironment(macCatalyst)
 
-        let fooBinary = productsDirectory.appendingPathComponent("peeps")
+        let fooBinary = productsDirectory.appendingPathComponent("contacts")
 
         let process = Process()
         process.executableURL = fooBinary
@@ -29,7 +29,7 @@ final class peepsTests: XCTestCase {
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         let output = String(data: data, encoding: .utf8)
 
-        XCTAssertEqual(output, "Hello, world!\n")
+        XCTAssertEqual(output, "Error: Missing expected argument \'<search-term>\'\n")
         #endif
     }
 
